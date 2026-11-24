@@ -18,9 +18,8 @@ jobs:
       - name: Install Theos
         run: |
           brew install ldid xz make
-          mkdir -p $HOME/theos
-          curl -L https://github.com/theos/theos/releases/latest/download/theos.tar.gz -o theos.tar.gz
-          tar -xzf theos.tar.gz -C $HOME/theos --strip-components=1
+          export GIT_TERMINAL_PROMPT=0
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
           echo "$HOME/theos/bin" >> $GITHUB_PATH
           
