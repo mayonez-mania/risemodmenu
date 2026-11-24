@@ -9,20 +9,26 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
       - name: Install Theos
         run: |
-          brew install ldid xz
+          brew install ldid xz make
           git clone --recursive https://github.com/theos/theos.git $HOME/theos
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          echo "$HOME/theos/bin" >> $GITHUB_PATH
           
       - name: Build
         run: |
-          make package
+          make clean || true
+          make package FINALPACKAGE=1
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ModMenu-Dylib
-          path: .theos/obj/debug/*.dylib
+          name: ModMenu-Package
+          path: |
+            packages/*.deb
+            .theos/obj/debug/*.dylib
+          if-no-files-found: warn
